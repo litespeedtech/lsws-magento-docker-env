@@ -1,0 +1,45 @@
+language: shell
+os: linux
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+  slack:
+    secure: PbBdTXt3lVGd0eOTaVzsKaLqf+e8SWY1hB137wQFsltYFaCVNXEUl6QkRHLm23I4LdmwDIM66teLYahp9tPEU0fZMmW4VDo2RtLSCaMGtJsIARz9054a3MQk1zS1QWqjJ1KqIaJ+UbJfBj7fCoEb6gV33YbKv3TxH4b3E+RvDe15ykicsn1qCfky3uL3//5L+jOq4d8sFF9YMdfB4lGTN6EauOEKgzJBpyAZUqw3wpW1EWWJ8lcGjruJz/UMdWl8AJySoJcBf4CTxp/OeEp8hj/Adr0zhPsDDlep7934RHQAJGZ7jDPhLcr2kTbRby/oDxCboSxbiIfCV7yhLN7NOBh2895NZU+PO5oYjTf/+cYZ7libIymSK2j/WjrizbjUJ6C62fMQQh0bXNkdgIV9b5GH+xkUtfDtFU2PqTQP6Oh52i7eYwAdG0rXC6nbLCcf/Qi4CDIpcQj5hBsr/fH+Hhl/eYmUZ8RCk6OXrmqkkiauGksauUpp57SbCWUEtqG4SCGv5lhfhSIhXbjZlmgtxQtDGERh50EzkXEBezYfxPN4r3t01+BtHRAF4XJbPPo+nrooMK0PlwegBdF7yhMThSzevV/z6S4DCafJLBcPEPVHs+o8Cw8tMmXdx/8gmNnnj1Zc6eKdm4kJaI2NpolZuqadxiPjTVjymQ2m37U5q9o=
+    template:
+      - "Repo %{repository_slug} *%{result}* build (<%{build_url}|#%{build_number}>) for commit (<%{compare_url}|%{commit}>)"
+      - "%{author}: _%{commit_message}_"
+      - "Execution time: *%{duration}*"
+      - "Message: *%{message}*"
+    on_success: always
+
+services:
+  - docker
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.25.0
+
+before_install:
+  - ./.travis/main.sh
+
+install:
+  - git clone https://github.com/litespeedtech/lsws-magento-docker-env.git
+  - cd lsws-magento-docker-env
+  - docker-compose up -d
+
+before_script:
+  - docker image ls
+  - sleep 10
+
+script:  
+  - ./.travis/verify.sh
+
+after_script:
+  - docker-compose stop
+  - docker-compose rm -f
+
+
+
+
+

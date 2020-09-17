@@ -1,0 +1,50 @@
+version: '3'
+services:
+  mysql:
+    image: mariadb:10.3.17
+    command: --max_allowed_packet=256M --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - "./data/db:/var/lib/mysql:delegated"
+    ports:
+       - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  litespeed:
+    image: litespeedtech/litespeed:${LSWS_VERSION}-${PHP_VERSION}
+    env_file:
+      - .env
+    volumes:
+        - ./lsws/conf:/usr/local/lsws/conf
+        - ./lsws/admin/conf:/usr/local/lsws/admin/conf
+        - ./bin/container:/usr/local/bin
+        - ./sites:/var/www/vhosts/
+        - ./acme:/root/.acme.sh/
+        - ./logs:/usr/local/lsws/logs/
+    ports:
+      - 80:80
+      - 443:443
+      - 443:443/udp
+      - 7080:7080
+    restart: always
+    environment:
+      TZ: ${TimeZone}
+  phpmyadmin:
+    image: bitnami/phpmyadmin:5.0.2-debian-10-r72
+    ports:
+      - 8080:80
+      - 8443:443
+    environment:
+        DATABASE_HOST: mysql
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+volumes:
+  esdata:

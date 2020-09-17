@@ -109,7 +109,7 @@ bash bin/webadmin.sh my_password
 ### Starting a Demo Site
 After running the following command, you should be able to access the Magento + LiteMage Cache installation with the configured domain. By default the domain is http://localhost.
 ```
-bash bin/demosite.sh
+bash bin/demosite.sh -M
 ```
 or with Sample data installed
 ```

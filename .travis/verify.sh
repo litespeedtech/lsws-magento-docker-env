@@ -18,7 +18,7 @@ verify_lsws(){
 
 verify_page(){
     curl -sik http://localhost:80/ >/dev/null 2>&1
-    curl -sIk http://localhost:80/ | grep -I litemage
+    curl -sIk http://localhost:80/ | grep -i litemage
     if [ ${?} = 0 ]; then
         echo '[O]  http://localhost:80/' 
     else
@@ -26,7 +26,7 @@ verify_page(){
         exit 1
     fi
     curl -sik https://localhost:443/ >/dev/null 2>&1
-    curl -sIk https://localhost:443/ | grep -I litemage
+    curl -sIk https://localhost:443/ | grep -i litemage
     if [ ${?} = 0 ]; then
         echo '[O]  https://localhost:443/' 
     else

@@ -30,7 +30,8 @@ install:
 
 before_script:
   - docker image ls
-  - sleep 10
+  - docker-compose ps
+  - sleep 15
 
 script:  
   - ./.travis/verify.sh

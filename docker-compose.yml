@@ -12,6 +12,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    restart: always  
   litespeed:
     image: litespeedtech/litespeed:${LSWS_VERSION}-${PHP_VERSION}
     env_file:
@@ -38,6 +39,7 @@ services:
       - 8443:443
     environment:
         DATABASE_HOST: mysql
+    restart: always    
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
     environment:
@@ -46,5 +48,6 @@ services:
       - 9200:9200
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    restart: always  
 volumes:
   esdata:

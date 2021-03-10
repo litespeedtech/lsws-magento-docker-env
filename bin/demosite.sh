@@ -70,17 +70,17 @@ create_db(){
 
 set_phpmemory(){
     if [ "${1}" = 'magento' ]; then 
-        PHP_INI=$(docker-compose exec litespeed su -c "php -i | grep 'Loaded Configuration File' | cut -d' ' -f5 " | tr -d '\r')
-        PHP_MEMORY=$(docker-compose exec litespeed su -c "cat $PHP_INI | grep memory_limit" | tr -d '\r')
-        docker-compose exec litespeed su -c "sed -i 's/^memory_limit.*/memory_limit = 755M/g' $PHP_INI"
-        echo PHP_INI $PHP_INI
-        echo PHP_MEMORY $PHP_MEMORY
+        PHP_INI=$(docker-compose exec -T litespeed su -c "php -i | grep 'Loaded Configuration File' | cut -d' ' -f5 " | tr -d '\r')
+        PHP_MEMORY=$(docker-compose exec -T litespeed su -c "cat $PHP_INI | grep memory_limit" | tr -d '\r')
+        docker-compose exec -T litespeed su -c "sed -i 's/^memory_limit.*/memory_limit = 755M/g' $PHP_INI"
+        echo "PHP_INI ${PHP_INI}"
+        echo "PHP_MEMORY ${PHP_MEMORY}"
     fi    
 }
 
 revert_phpmemory(){
     if [ "${1}" = 'magento' ]; then 
-        docker-compose exec litespeed /bin/bash -c "sed -i 's/^memory_limit.*/$PHP_MEMORY/g' $PHP_INI"
+        docker-compose exec -T litespeed /bin/bash -c "sed -i 's/^memory_limit.*/$PHP_MEMORY/g' $PHP_INI"
     fi    
 }    
 

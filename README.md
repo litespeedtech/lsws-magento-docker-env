@@ -1,5 +1,5 @@
 # LiteSpeed WordPress Docker Container
-[![Build Status](https://travis-ci.com/litespeedtech/lsws-magento-docker-env.svg?branch=master)](https://hub.docker.com/r/litespeedtech/litespeed)
+[![Build Status](https://github.com/litespeedtech/lsws-magento-docker-env/workflows/docker-build/badge.svg)](https://github.com/litespeedtech/lsws-magento-docker-env/actions/)
 [![docker pulls](https://img.shields.io/docker/pulls/litespeedtech/litespeed?style=flat&color=blue)](https://hub.docker.com/r/litespeedtech/litespeed)
 [<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack) 
 [<img src="https://img.shields.io/twitter/follow/litespeedtech.svg?label=Follow&style=social">](https://twitter.com/litespeedtech)
@@ -38,8 +38,8 @@ The docker image installs the following packages on your system:
 |PHP|[Latest version](http://rpms.litespeedtech.com/debian/)|
 |LiteSpeed Cache|[Latest from WordPress.org](https://wordpress.org/plugins/litespeed-cache/)|
 |ACME|[Latest from ACME official](https://github.com/acmesh-official/get.acme.sh)|
-|Magento2|[2.4](https://devdocs.magento.com/guides/v2.4/release-notes/release-notes-2-4-0-open-source.html)|
-|elasticsearch|[7.9.1](docker.elastic.co/elasticsearch/elasticsearch)|
+|Magento2|[2.4.2](https://devdocs.magento.com/guides/v2.4/release-notes/open-source-2-4-2.html)|
+|elasticsearch|[7.9.1](https://hub.docker.com/_/elasticsearch)|
 |WordPress|[Latest from WordPress](https://wordpress.org/download/)|
 |phpMyAdmin|[Latest from dockerhub](https://hub.docker.com/r/bitnami/phpmyadmin/)|
 

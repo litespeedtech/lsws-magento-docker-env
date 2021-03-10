@@ -40,26 +40,26 @@ set_phpmemory(){
 
 revert_phpmemory(){
     if [ "${1}" = 'magento' ]; then 
-        docker-compose exec litespeed /bin/bash -c "sed -i 's/^memory_limit.*/$PHP_MEMORY/g' $PHP_INI"
+        docker-compose exec -T litespeed /bin/bash -c "sed -i 's/^memory_limit.*/$PHP_MEMORY/g' $PHP_INI"
     fi    
 }   
 
 
 install_packages(){
     if [ "${1}" = 'wordpress' ]; then
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package ed"
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package unzip"  
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package ed"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package unzip"  
     elif [ "${1}" = 'magento' ]; then
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package composer"
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package unzip"
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package git"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package composer"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package unzip"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package git"
     fi    
 }
 
 app_download(){
     set_phpmemory ${1}
     install_packages ${1}
-    docker-compose exec litespeed bash -c "appinstallctl.sh --app ${1} --domain ${2} ${3}"
+    docker-compose exec -T litespeed bash -c "appinstallctl.sh --app ${1} --domain ${2} ${3}"
     revert_phpmemory ${1}
     bash bin/webadmin.sh -r
     exit 0

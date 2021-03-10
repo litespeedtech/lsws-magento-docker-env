@@ -99,18 +99,18 @@ EOT
 
 install_packages(){
     if [ "${1}" = 'wordpress' ]; then
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package ed"
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package unzip"  
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package ed"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package unzip"  
     elif [ "${1}" = 'magento' ]; then
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package composer"
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package unzip"
-        docker-compose exec litespeed /bin/bash -c "pkginstallctl.sh --package git"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package composer"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package unzip"
+        docker-compose exec -T litespeed /bin/bash -c "pkginstallctl.sh --package git"
     fi    
 }
 
 app_download(){
     install_packages ${1}
-    docker-compose exec ${CONT_NAME} bash -c "appinstallctl.sh --app ${1} --domain ${2} ${3}"
+    docker-compose exec -T ${CONT_NAME} bash -c "appinstallctl.sh --app ${1} --domain ${2} ${3}"
 }
 
 lsws_restart(){

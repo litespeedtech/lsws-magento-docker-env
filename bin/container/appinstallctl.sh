@@ -13,7 +13,7 @@ PLUGINLIST="litespeed-cache.zip"
 THEME='twentytwenty'
 LSDIR='/usr/local/lsws'
 MA_COMPOSER='/usr/local/bin/composer'
-MA_VER='2.4.2'
+MA_VER='2.4.5'
 EMAIL='test@example.com'
 APP_ACCT=''
 APP_PASS=''
@@ -673,7 +673,10 @@ install_litemage(){
 }
 
 config_litemage(){
-    bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application LITEMAGE
+    echoG 'Set full_page_cache to Litemage'
+	bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application 168
+	echoG 'Flush cache'
+	bin/magento cache:flush >/dev/null 2>&1
 }
 
 app_magento_dl(){

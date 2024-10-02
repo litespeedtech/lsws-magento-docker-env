@@ -32,13 +32,13 @@ The docker image installs the following packages on your system:
 
 |Component|Version|
 | :-------------: | :-------------: |
-|Linux|Ubuntu 22.04|
+|Linux|Ubuntu 24.04|
 |LiteSpeed|[Latest version](https://www.litespeedtech.com/products/litespeed-web-server/download)|
 |MariaDB|[Stable version: 10.4](https://hub.docker.com/_/mariadb)|
 |PHP|[Latest version](http://rpms.litespeedtech.com/debian/)|
 |LiteSpeed Cache|[Latest from WordPress.org](https://wordpress.org/plugins/litespeed-cache/)|
 |ACME|[Latest from ACME official](https://github.com/acmesh-official/get.acme.sh)|
-|Magento2|[2.4.5](https://devdocs.magento.com/guides/v2.4/release-notes/open-source-2-4-2.html)|
+|Magento2|[2.4.7](https://devdocs.magento.com/guides/v2.4/release-notes/open-source-2-4-2.html)|
 |elasticsearch|[8.4.2](https://hub.docker.com/_/elasticsearch)|
 |WordPress|[Latest from WordPress](https://wordpress.org/download/)|
 |phpMyAdmin|[Latest from dockerhub](https://hub.docker.com/r/bitnami/phpmyadmin/)|
@@ -200,12 +200,12 @@ bash bin/webadmin.sh [-S, --serial] TRIAL
 After installation, you can use phpMinAdmin to access the database by visiting http://127.0.0.1:8080 or https://127.0.0.1:8443. The default username is `root`, and the password is the same as the one you supplied in the `.env` file.
 
 ## Customization
-If you want to customize the image by adding some packages, e.g. `lsphp74-pspell`, just extend it with a Dockerfile. 
+If you want to customize the image by adding some packages, e.g. `lsphp83-pspell`, just extend it with a Dockerfile. 
 1. We can create a `custom` folder and a `custom/Dockerfile` file under the main project. 
 2. Add the following example code to `Dockerfile` under the custom folder
 ```
 FROM litespeedtech/litespeed:latest
-RUN apt-get update && apt-get install lsphp74-pspell
+RUN apt-get update && apt-get install lsphp83-pspell
 ```
 3. Add `build: ./custom` line under the "image: litespeedtech" of docker-composefile. So it will looks like this 
 ```

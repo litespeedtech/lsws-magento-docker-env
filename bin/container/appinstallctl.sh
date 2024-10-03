@@ -727,6 +727,7 @@ install_magento(){
 			--timezone=America/Chicago \
 			--use-rewrites=1 \
 			--backend-frontname=${MA_BACK_URL} \
+			--search-engine=elasticsearch7 \
 			--elasticsearch-host=elasticsearch \
 			--elasticsearch-port=9200
 		./bin/magento config:set web/unsecure/base_url http://${DOMAIN}/ 

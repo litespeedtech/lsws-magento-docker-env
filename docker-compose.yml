@@ -1,18 +1,17 @@
-version: '3'
 services:
   mysql:
-    image: mariadb:10.4
+    image: mariadb:10.6
     command: --max_allowed_packet=256M --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - "./data/db:/var/lib/mysql:delegated"
-    ports:
-       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    restart: always  
+    restart: always
+    networks:
+      - default    
   litespeed:
     image: litespeedtech/litespeed:${LSWS_VERSION}-${PHP_VERSION}
     env_file:
@@ -32,6 +31,8 @@ services:
     restart: always
     environment:
       TZ: ${TimeZone}
+    networks:
+      - default      
   phpmyadmin:
     image: bitnami/phpmyadmin:5.2.0-debian-11-r43
     ports:
@@ -48,6 +49,11 @@ services:
       - 9200:9200
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    restart: always  
+    restart: always
+    networks:
+      - default    
 volumes:
   esdata:
+networks:
+  default:
+    driver: bridge  

@@ -102,9 +102,6 @@ case ${1} in
             systemd)
                 install_systemd
             ;;    
-            elasticsearch)
-                install_elasticsearch
-            ;;    
             git)
                 install_git
             ;;    

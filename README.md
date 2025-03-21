@@ -39,7 +39,7 @@ The docker image installs the following packages on your system:
 |LiteSpeed Cache|[Latest from WordPress.org](https://wordpress.org/plugins/litespeed-cache/)|
 |ACME|[Latest from ACME official](https://github.com/acmesh-official/get.acme.sh)|
 |Magento2|[2.4.7](https://devdocs.magento.com/guides/v2.4/release-notes/open-source-2-4-2.html)|
-|elasticsearch|[7.9.1](https://hub.docker.com/_/elasticsearch)|
+|OpenSearch|[Latest version](https://hub.docker.com/r/opensearchproject/opensearch)|
 |WordPress|[Latest from WordPress](https://wordpress.org/download/)|
 |phpMyAdmin|[Latest from dockerhub](https://hub.docker.com/r/bitnami/phpmyadmin/)|
 

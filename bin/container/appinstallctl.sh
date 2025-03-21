@@ -725,13 +725,11 @@ install_magento(){
 			--language=en_US \
 			--currency=USD \
 			--timezone=America/Chicago \
-			--use-rewrites=1 \
 			--backend-frontname=${MA_BACK_URL} \
-			--search-engine=elasticsearch7 \
-			--elasticsearch-host=elasticsearch \
-			--elasticsearch-port=9200
+			--opensearch-host=opensearch
 		./bin/magento config:set web/unsecure/base_url http://${DOMAIN}/ 
 		./bin/magento config:set web/secure/base_url https://${DOMAIN}/
+		./bin/magento indexer:reindex
 		if [ ${?} = 0 ]; then
 			echoG 'Magento install finished'
 		else

@@ -34,10 +34,9 @@ services:
     networks:
       - default      
   phpmyadmin:
-    image: bitnami/phpmyadmin:5.2.2
+    image: phpmyadmin/phpmyadmin:${PHPMYADMIN_VERSION}
     ports:
-      - 8080:8080
-      - 8443:8443
+      - 8080:80
     environment:
         DATABASE_HOST: mysql
     restart: always    

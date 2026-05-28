@@ -47,7 +47,7 @@ verify_phpadmin(){
 
 main(){
     verify_lsws
-    verify_phpadmin
+    #verify_phpadmin
     install_demo
     verify_page
 }

@@ -6,7 +6,8 @@ INSTALL=''
 UNINSTALL=''
 TYPE=0
 CONT_NAME='litespeed'
-ACME_SRC='https://raw.githubusercontent.com/Neilpang/acme.sh/master/acme.sh'
+ACME_VERSION='3.1.2'
+ACME_SRC="https://raw.githubusercontent.com/acmesh-official/acme.sh/${ACME_VERSION}/acme.sh"
 EPACE='        '
 RENEW=''
 RENEW_ALL=''
@@ -73,14 +74,32 @@ domain_filter(){
     DOMAIN="${DOMAIN#scp://}"
     DOMAIN="${DOMAIN#sftp://}"
     DOMAIN=${DOMAIN%%/*}
+    validate_domain "${DOMAIN}"
+}
+
+validate_domain(){
+    if ! echo "${1}" | grep -Eq '^(localhost|([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,})$'; then
+        echo -e "[X] Invalid domain name: \e[31m${1}\e[39m. Abort!"
+        exit 1
+    fi
 }
 
 email_filter(){
-    CKREG="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
-    if [[ "${1}" =~ ${CKREG} ]] ; then
-        echo -e "[O] The E-mail \033[32m${1}\033[0m is valid."
+    local EMAIL_CLEAN="${1}"
+
+    # Hard limits: non-empty, <=254 chars (RFC 5321), and not starting with '-'
+    # (prevents argument injection into acme.sh, e.g. --email=--foo).
+    if [ -z "${EMAIL_CLEAN}" ] || [ "${#EMAIL_CLEAN}" -gt 254 ] || [ "${EMAIL_CLEAN:0:1}" = '-' ]; then
+        echo -e "[X] The E-mail \e[31m${EMAIL_CLEAN}\e[39m is invalid"
+        exit 1
+    fi
+
+    CKREG='^[A-Za-z0-9._%+-]+@[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$'
+
+    if [[ "${EMAIL_CLEAN}" =~ ${CKREG} ]]; then
+        echo -e "[O] The E-mail \033[32m${EMAIL_CLEAN}\033[0m is valid."
     else
-        echo -e "[X] The E-mail \e[31m${1}\e[39m is invalid"
+        echo -e "[X] The E-mail \e[31m${EMAIL_CLEAN}\e[39m is invalid"
         exit 1
     fi
 }
@@ -122,14 +141,27 @@ domain_verify(){
 install_acme(){
     echo '[Start] Install ACME'
     if [ "${1}" = 'true' ]; then
-        docker compose exec litespeed su -c "cd; wget ${ACME_SRC}; chmod 755 acme.sh; \
-        ./acme.sh --install --cert-home  ~/.acme.sh/certs; \
-        rm ~/acme.sh"
+        docker compose exec litespeed su -c "
+            cd &&
+            wget ${ACME_SRC} &&
+            chmod 755 acme.sh &&
+            ./acme.sh --install --cert-home ~/.acme.sh/certs &&
+            /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt &&
+            rm ~/acme.sh
+        "
     elif [ "${2}" != '' ]; then
         email_filter "${2}"
-        docker compose exec litespeed su -c "cd; wget ${ACME_SRC}; chmod 755 acme.sh; \
-        ./acme.sh --install --cert-home  ~/.acme.sh/certs --accountemail  ${2}; \
-        rm ~/acme.sh"
+        docker compose exec \
+            -e ACME_SRC="${ACME_SRC}" \
+            -e ACME_EMAIL="${2}" \
+            litespeed su -c '
+            cd &&
+            wget "$ACME_SRC" &&
+            chmod 755 acme.sh &&
+            ./acme.sh --install --cert-home ~/.acme.sh/certs --accountemail "$ACME_EMAIL" &&
+            /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt &&
+            rm ~/acme.sh
+        '
     else
         help_message 1
         exit 1
@@ -162,16 +194,32 @@ lsws_restart(){
 doc_root_verify(){
     if [ "${DOC_ROOT}" = '' ]; then
         DOC_PATH="/var/www/vhosts/${1}/html"
+        ALT_DOC_PATH="/var/www/vhosts/www.${1}/html"
     else
-        DOC_PATH="${DOC_ROOT}"    
+        DOC_PATH="${DOC_ROOT}"
     fi
+
     docker compose exec ${CONT_NAME} su -c "[ -e ${DOC_PATH} ]"
     if [ ${?} -eq 0 ]; then
         echo -e "[O] The document root folder \033[32m${DOC_PATH}\033[0m does exist."
-    else
-        echo -e "[X] The document root folder \e[31m${DOC_PATH}\e[39m does not exist!"
-        exit 1
+        return 0
     fi
+
+    if [ "${DOC_ROOT}" = '' ]; then
+        docker compose exec ${CONT_NAME} su -c "[ -e ${ALT_DOC_PATH} ]"
+        if [ ${?} -eq 0 ]; then
+            DOC_PATH="${ALT_DOC_PATH}"
+            echo -e "[!] The default document root was not found. Using fallback \033[33m${DOC_PATH}\033[0m."
+            echo -e "[O] The document root folder \033[32m${DOC_PATH}\033[0m does exist."
+            return 0
+        fi
+    fi
+
+    echo -e "[X] The document root folder \e[31m${DOC_PATH}\e[39m does not exist!"
+    if [ "${DOC_ROOT}" = '' ]; then
+        echo -e "[X] The fallback document root \e[31m${ALT_DOC_PATH}\e[39m does not exist!"
+    fi
+    exit 1
 }
 
 install_cert(){
@@ -228,13 +276,16 @@ main(){
         renew_all_acme
         exit 0
     elif [ "${RENEW}" = 'true' ]; then
-        renew_acme ${DOMAIN}
+        validate_domain "${DOMAIN}"
+        renew_acme "${DOMAIN}"
         exit 0
     elif [ "${REVOKE}" = 'true' ]; then
-        revoke ${DOMAIN}
+        validate_domain "${DOMAIN}"
+        revoke "${DOMAIN}"
         exit 0
     elif [ "${REMOVE}" = 'true' ]; then
-        remove ${DOMAIN}
+        validate_domain "${DOMAIN}"
+        remove "${DOMAIN}"
         exit 0
     fi
 

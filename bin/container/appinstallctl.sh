@@ -13,7 +13,7 @@ PLUGINLIST="litespeed-cache.zip"
 THEME='twentytwenty'
 LSDIR='/usr/local/lsws'
 MA_COMPOSER='/usr/local/bin/composer'
-MA_VER='2.4.8'
+MA_VER='2.4.9'
 EMAIL='test@example.com'
 APP_ACCT=''
 APP_PASS=''
@@ -60,6 +60,13 @@ help_message(){
 check_input(){
     if [ -z "${1}" ]; then
         help_message 1
+        exit 1
+    fi
+}
+
+validate_domain(){
+    if ! echo "${1}" | grep -Eq '^(localhost|([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,})$'; then
+        echo "[X] Invalid domain name: '${1}'. Abort!"
         exit 1
     fi
 }
@@ -657,6 +664,7 @@ config_ma_htaccess(){
         echoR "${VH_DOC_ROOT}/.htaccess not exist, skip"
     else
         sed -i '1i\<IfModule LiteSpeed>LiteMage on</IfModule>\' ${VH_DOC_ROOT}/.htaccess
+		sed -i '/RewriteEngine on/a RewriteCond %{REQUEST_URI} !^/\\.well-known/' ${VH_DOC_ROOT}/.htaccess
     fi
 }
 
@@ -691,7 +699,6 @@ app_magento_dl(){
 		mv magento2-${MA_VER}/* ${VH_DOC_ROOT}
 		mv magento2-${MA_VER}/.editorconfig ${VH_DOC_ROOT}
 		mv magento2-${MA_VER}/.htaccess ${VH_DOC_ROOT}
-		mv magento2-${MA_VER}/.php_cs.dist ${VH_DOC_ROOT}
 		mv magento2-${MA_VER}/.user.ini ${VH_DOC_ROOT}
 		rm -rf ${MA_VER}.tar.gz magento2-${MA_VER}	
 	else
@@ -796,13 +803,12 @@ main(){
 		change_owner
 		exit 0
 	elif [ "${APP}" = 'magento' ] || [ "${APP}" = 'M' ]; then
-	    #prevent_php
 		check_memory
 		check_composer
 		check_git
 		app_magento_dl
 		install_magento
-		install_litemage
+		#install_litemage
 		config_ma_htaccess
         config_litemage
 		install_ma_sample
@@ -829,6 +835,7 @@ while [ ! -z "${1}" ]; do
 			;;
 		-[dD] | -domain | --domain) shift
 			check_input "${1}"
+			validate_domain "${1}"
 			DOMAIN="${1}"
 			;;
 		-[sS] | --sample)

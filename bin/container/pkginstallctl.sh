@@ -54,9 +54,8 @@ install_composer(){
         echoG 'Composer already installed'
     else
         echoG 'Going to install composer package'
-        #curl -sS https://getcomposer.org/installer | php
         wget -qO composer-setup.php https://getcomposer.org/installer
-        php composer-setup.php --version 2.4.2
+        php composer-setup.php --2
         mv composer.phar ${MA_COMPOSER}
         composer --version
         if [ ${?} != 0 ]; then

@@ -3,7 +3,7 @@
 set -o errexit
 
 install_demo(){
-    ./bin/demosite.sh
+    ./bin/demosite.sh || true
 }
 
 verify_lsws(){

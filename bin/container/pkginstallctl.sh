@@ -30,7 +30,7 @@ help_message(){
 install_ed(){
     if [ ! -f /bin/ed ]; then
         echo "Install ed package.."
-        apt-get install ed -y > /dev/null 2>&1
+        apt update && apt-get install ed -y > /dev/null 2>&1
         ed -V > /dev/null 2>&1
         if [ ${?} != 0 ]; then
             echoR 'Issue with ed, Please check!'
@@ -41,7 +41,7 @@ install_ed(){
 install_unzip(){
     if [ ! -f /usr/bin/unzip ]; then 
         echoG "Install unzip package"
-        apt-get install unzip -y > /dev/null 2>&1
+        apt update && apt-get install unzip -y > /dev/null 2>&1
         unzip -v > /dev/null 2>&1
         if [ ${?} != 0 ]; then
             echoR 'Issue with unzip, Please check!'

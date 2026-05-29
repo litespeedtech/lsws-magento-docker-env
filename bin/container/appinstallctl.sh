@@ -13,7 +13,7 @@ PLUGINLIST="litespeed-cache.zip"
 THEME='twentytwenty'
 LSDIR='/usr/local/lsws'
 MA_COMPOSER='/usr/local/bin/composer'
-MA_VER='2.4.9'
+MA_VER='2.4.8'
 EMAIL='test@example.com'
 APP_ACCT=''
 APP_PASS=''
@@ -808,7 +808,7 @@ main(){
 		check_git
 		app_magento_dl
 		install_magento
-		#install_litemage
+		install_litemage
 		config_ma_htaccess
         config_litemage
 		install_ma_sample

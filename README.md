@@ -4,7 +4,7 @@
 [<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack) 
 [<img src="https://img.shields.io/twitter/follow/litespeedtech.svg?label=Follow&style=social">](https://twitter.com/litespeedtech)
 
-Install a Magento2.4 container with LiteSpeed stable version based on Ubuntu 22.04 Linux.
+Install a Magento2.4 container with LiteSpeed stable version based on Ubuntu 26.04 Linux.
 
 ### Prerequisites
 1. [Install Docker](https://www.docker.com/)
@@ -38,7 +38,7 @@ The docker image installs the following packages on your system:
 |PHP|[Latest version](http://rpms.litespeedtech.com/debian/)|
 |LiteSpeed Cache|[Latest from WordPress.org](https://wordpress.org/plugins/litespeed-cache/)|
 |ACME|[Latest from ACME official](https://github.com/acmesh-official/get.acme.sh)|
-|Magento2|[2.4.9](https://devdocs.magento.com/guides/v2.4/release-notes/open-source-2-4-9.html)|
+|Magento2|[2.4.8](https://devdocs.magento.com/guides/v2.4/release-notes/open-source-2-4-8.html)|
 |OpenSearch|[Latest version](https://hub.docker.com/r/opensearchproject/opensearch)|
 |WordPress|[Latest from WordPress](https://wordpress.org/download/)|
 |phpMyAdmin|[Latest from dockerhub](https://hub.docker.com/r/bitnami/phpmyadmin/)|

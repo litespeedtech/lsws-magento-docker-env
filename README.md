@@ -199,6 +199,10 @@ bash bin/webadmin.sh [-S, --serial] TRIAL
 ### Accessing the Database
 After installation, you can use phpMinAdmin to access the database by visiting http://127.0.0.1:8080 or https://127.0.0.1:8443. The default username is `root`, and the password is the same as the one you supplied in the `.env` file.
 
+
+### How to enable purge out of stock
+If you enable "Only purge the product when out of stock" and see a warning indicating that required Magento Inventory (MSI) modules (such as `Magento_InventorySales`) are missing, you may need to install the corresponding Inventory packages manually. For more information about Magento Inventory modules, see the. See [Inventory Management installation guide](https://experienceleague.adobe.com/en/docs/commerce-admin/inventory/get-started/install-update).
+
 ## Customization
 If you want to customize the image by adding some packages, e.g. `lsphp83-pspell`, just extend it with a Dockerfile. 
 1. We can create a `custom` folder and a `custom/Dockerfile` file under the main project. 
